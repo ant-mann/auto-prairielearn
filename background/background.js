@@ -43,6 +43,7 @@ const RESPONSE_TYPE_TO_PROVIDER = {
   geminiResponse: "gemini",
   deepseekResponse: "deepseek",
 };
+const SHARED_CONTENT_SCRIPT_FILES = ["content-scripts/answer-utils.js"];
 
 let lastActiveTabId = null;
 let activePrairieTabId = null;
@@ -336,16 +337,18 @@ async function injectRoleScript(tabId, role) {
     throw createTypedError("ROLE_UNKNOWN", `Unknown role: ${role}`);
   }
 
+  const filesToInject = [...SHARED_CONTENT_SCRIPT_FILES, config.scriptFile];
+
   try {
     await chrome.scripting.executeScript({
       target: { tabId },
-      files: [config.scriptFile],
+      files: filesToInject,
     });
   } catch (error) {
     throw createTypedError(
       "SCRIPT_INJECTION_FAILED",
-      `Failed to inject ${config.scriptFile}: ${error.message}`,
-      { tabId, role }
+      `Failed to inject scripts (${filesToInject.join(", ")}): ${error.message}`,
+      { tabId, role, files: filesToInject }
     );
   }
 }
