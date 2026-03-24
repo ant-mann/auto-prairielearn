@@ -1,3 +1,12 @@
+/**
+ * ChatGPT integration supports two runtime modes:
+ * 1) Signed-in chat UI where the extension can directly type and submit prompts.
+ * 2) Logged-out or restricted UI where we still detect readiness/health and report
+ *    deterministic errors back to PrairieLearn for fallback handling.
+ *
+ * The focus-hold logic below exists to keep the composer stable while synthetic input
+ * events are dispatched, which prevents intermittent prompt loss in dynamic UI updates.
+ */
 let hasResponded = false;
 let messageCountAtQuestion = 0;
 let observationStartTime = 0;
