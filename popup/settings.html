@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto-PrairieLearn Settings</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <img src="../assets/icon.png" alt="Auto-PrairieLearn Logo" class="logo" />
+        <div class="header-copy">
+          <h1>Auto-PrairieLearn</h1>
+          <p>High-automation controls for PrairieLearn runs.</p>
+        </div>
+      </header>
+
+      <section class="settings-section">
+        <div class="section-head">
+          <h2>AI Assistant</h2>
+          <span id="footer-version" class="version-pill">Loading...</span>
+        </div>
+        <div class="model-selector">
+          <button id="chatgpt" class="model-button active">
+            <div class="model-copy">
+              <strong>ChatGPT</strong>
+              <span>Best-effort guest support, strong formatting rules</span>
+            </div>
+            <span class="availability" id="chatgpt-availability">Checking</span>
+          </button>
+          <button id="gemini" class="model-button">
+            <div class="model-copy">
+              <strong>Gemini</strong>
+              <span>Usually the most stable for unattended runs</span>
+            </div>
+            <span class="availability" id="gemini-availability">Checking</span>
+          </button>
+          <button id="deepseek" class="model-button">
+            <div class="model-copy">
+              <strong>DeepSeek</strong>
+              <span>Alternative provider with JSON-friendly responses</span>
+            </div>
+            <span class="availability" id="deepseek-availability">Checking</span>
+          </button>
+        </div>
+        <div class="status-section">
+          <div id="status-message">Checking assistant availability...</div>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h2>Automation</h2>
+        <div class="setting-card">
+          <label class="row-label" for="submission-mode-toggle">
+            <span>Auto grade after fill</span>
+            <input type="checkbox" id="submission-mode-toggle" />
+          </label>
+          <p>Automatically click Save &amp; Grade after selecting an answer.</p>
+        </div>
+        <div class="setting-card">
+          <label class="row-label" for="auto-advance-toggle">
+            <span>Auto advance questions</span>
+            <input type="checkbox" id="auto-advance-toggle" />
+          </label>
+          <p>Keep moving through variants and questions until the assignment is done.</p>
+        </div>
+        <div class="setting-card">
+          <label class="row-label" for="carry-feedback-toggle">
+            <span>Carry wrong-answer feedback</span>
+            <input type="checkbox" id="carry-feedback-toggle" />
+          </label>
+          <p>Tell the next prompt that the previous selected answer was wrong.</p>
+        </div>
+        <div class="setting-card">
+          <label class="row-label" for="show-badge-toggle">
+            <span>Show inline status badge</span>
+            <input type="checkbox" id="show-badge-toggle" />
+          </label>
+          <p>Show provider, phase, retries, and errors next to the PrairieLearn button.</p>
+        </div>
+        <div class="setting-grid">
+          <label class="field">
+            <span>Max variants / question</span>
+            <input type="number" id="max-variants-input" min="1" max="20" />
+          </label>
+          <label class="field">
+            <span>Response timeout (sec)</span>
+            <input type="number" id="response-timeout-input" min="15" max="300" step="5" />
+          </label>
+          <label class="field">
+            <span>Prompt strategy</span>
+            <select id="prompt-strategy-select">
+              <option value="strict_json">Strict short answer</option>
+              <option value="answer_explain">Answer + explanation</option>
+              <option value="retry_feedback">Retry with feedback</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h2>Recovery</h2>
+        <div class="setting-card">
+          <label class="row-label" for="focus-ai-toggle">
+            <span>Focus AI tab while sending</span>
+            <input type="checkbox" id="focus-ai-toggle" />
+          </label>
+          <p>Bring the provider tab to the front before sending a prompt in the same window.</p>
+        </div>
+        <div class="setting-card">
+          <label class="row-label" for="stop-on-error-toggle">
+            <span>Stop on provider error</span>
+            <input type="checkbox" id="stop-on-error-toggle" />
+          </label>
+          <p>If disabled, the extension can retry or fail over instead of stopping immediately.</p>
+        </div>
+        <div class="setting-grid">
+          <label class="field">
+            <span>Fallback provider</span>
+            <select id="fallback-provider-select">
+              <option value="">None</option>
+              <option value="chatgpt">ChatGPT</option>
+              <option value="gemini">Gemini</option>
+              <option value="deepseek">DeepSeek</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h2>Diagnostics</h2>
+        <div class="setting-card">
+          <label class="row-label" for="debug-mode-toggle">
+            <span>Verbose debug mode</span>
+            <input type="checkbox" id="debug-mode-toggle" />
+          </label>
+          <p>Enable detailed PrairieLearn and provider logs in the browser console.</p>
+        </div>
+      </section>
+    </div>
+    <script src="settings.js"></script>
+  </body>
+</html>

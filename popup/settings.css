@@ -1,0 +1,218 @@
+:root {
+  --bg: #0d1321;
+  --panel: #141d2f;
+  --panel-2: #1b2740;
+  --border: #2c3c60;
+  --text: #edf2fb;
+  --muted: #9fb0d1;
+  --accent: #7cc6fe;
+  --accent-strong: #5aa9e6;
+  --good: #6dd3a0;
+  --warn: #ffcf6e;
+  --bad: #ff8c82;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(circle at top right, rgba(124, 198, 254, 0.12), transparent 32%),
+    linear-gradient(180deg, #09101c 0%, var(--bg) 100%);
+  color: var(--text);
+  min-width: 430px;
+}
+
+.container {
+  width: 430px;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+}
+
+.header-copy h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.header-copy p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.settings-section {
+  margin-bottom: 18px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.version-pill {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.model-selector {
+  display: grid;
+  gap: 8px;
+}
+
+.model-button,
+.setting-card,
+.field input,
+.field select {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  color: var(--text);
+}
+
+.model-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.model-button:hover,
+.setting-card:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+}
+
+.model-button.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(124, 198, 254, 0.35) inset;
+}
+
+.model-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.model-copy strong {
+  font-size: 14px;
+}
+
+.model-copy span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.availability {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.availability.ready {
+  color: var(--good);
+}
+
+.availability.error {
+  color: var(--bad);
+}
+
+.status-section {
+  margin-top: 10px;
+}
+
+#status-message {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#status-message.success {
+  color: var(--good);
+}
+
+#status-message.error {
+  color: var(--bad);
+}
+
+.setting-card {
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.setting-card p {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.row-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.setting-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px 11px;
+  outline: none;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--accent-strong);
+  width: 16px;
+  height: 16px;
+}
