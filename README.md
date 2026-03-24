@@ -35,11 +35,11 @@ Chrome extension that automates PrairieLearn question solving by sending each qu
 
 ## Provider notes
 
+- Gemini (best-supported):
+  - plain-text-safe composer insertion for code prompts (`<`, `>`, etc.) to avoid truncation.
 - ChatGPT:
   - logged-in and best-effort logged-out support.
   - logged-out mode uses extra readiness checks and focus-hold handling for reliability.
-- Gemini:
-  - plain-text-safe composer insertion for code prompts (`<`, `>`, etc.) to avoid truncation.
 - DeepSeek:
   - JSON-oriented response capture path.
 
@@ -65,34 +65,6 @@ Chrome extension that automates PrairieLearn question solving by sending each qu
 3. Click **Load unpacked**.
 4. Select the `auto-prairielearn` folder.
 5. Open PrairieLearn and at least one provider tab (ChatGPT, Gemini, or DeepSeek).
-
-## Release / Packaging
-
-### Creating a release
-
-1. Update the `version` field in `manifest.json` to the new version number (e.g. `"1.2.3"`).
-2. Commit and push the change.
-3. Push a matching version tag:
-
-```bash
-git tag v1.2.3
-git push origin v1.2.3
-```
-
-The [GitHub Actions release workflow](.github/workflows/release.yml) will:
-
-1. Package the extension into `auto-prairielearn-<version>.zip` (containing only the files needed for distribution).
-2. Publish a GitHub Release with the ZIP attached and auto-generated release notes.
-
-> **Note:** Keep the `version` in `manifest.json` in sync with the tag so the extension reports the correct version to Chrome.
-
-### Building locally
-
-```bash
-npm run package
-```
-
-This creates `auto-prairielearn.zip` in the project root, ready for manual distribution or Chrome Web Store upload.
 
 ## Known limits
 
