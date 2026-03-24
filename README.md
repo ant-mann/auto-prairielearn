@@ -92,4 +92,4 @@ This project is licensed under the MIT License. See [LICENSE](./LICENSE).
 Portions derived from Auto-McGraw remain under the MIT License and retain the original copyright notice.
 
 For third-party license notices, see [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
-# auto-prairielearn
+
