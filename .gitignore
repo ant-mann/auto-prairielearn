@@ -1,0 +1,5 @@
+# Build artifacts
+*.zip
+
+# Node
+node_modules/
