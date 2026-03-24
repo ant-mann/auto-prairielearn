@@ -89,6 +89,18 @@ https://*/pl/course_instance/*/instance_question/*
 
 ---
 
+## 🧪 Testing
+
+Run the regression tests for answer normalization/parsing logic:
+
+```bash
+npm test
+```
+
+These tests cover the shared `content-scripts/answer-utils.js` module used by the PrairieLearn content script.
+
+---
+
 ## ⚠️ Disclaimer
 
 This project is provided for educational and research purposes. You are responsible for complying with your course, institution, and platform policies, including academic integrity requirements. **Use this software at your own risk.**

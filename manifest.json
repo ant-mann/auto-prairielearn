@@ -3,7 +3,11 @@
   "name": "Auto-PrairieLearn",
   "version": "1.0",
   "description": "Transfers PrairieLearn multiple-choice questions to AI assistants and optionally auto-grades the selected answer.",
-  "permissions": ["tabs", "storage", "scripting"],
+  "permissions": [
+    "tabs",
+    "storage",
+    "scripting"
+  ],
   "host_permissions": [
     "https://*/pl/course_instance/*/instance_question/*",
     "https://chatgpt.com/*",
@@ -23,23 +27,38 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*/pl/course_instance/*/instance_question/*"],
-      "js": ["content-scripts/prairielearn.js"]
+      "matches": [
+        "https://*/pl/course_instance/*/instance_question/*"
+      ],
+      "js": [
+        "content-scripts/answer-utils.js",
+        "content-scripts/prairielearn.js"
+      ]
     },
     {
-      "matches": ["https://chatgpt.com/*"],
-      "js": ["content-scripts/chatgpt.js"]
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "content-scripts/chatgpt.js"
+      ]
     },
     {
-      "matches": ["https://gemini.google.com/*"],
-      "js": ["content-scripts/gemini.js"]
+      "matches": [
+        "https://gemini.google.com/*"
+      ],
+      "js": [
+        "content-scripts/gemini.js"
+      ]
     },
     {
       "matches": [
         "https://chat.deepseek.com/*",
         "https://deepseek.chat/*"
       ],
-      "js": ["content-scripts/deepseek.js"]
+      "js": [
+        "content-scripts/deepseek.js"
+      ]
     }
   ]
 }

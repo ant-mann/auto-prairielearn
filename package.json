@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Chrome extension that automates PrairieLearn question solving with AI providers",
   "scripts": {
-    "package": "zip -r auto-prairielearn.zip manifest.json assets/ background/ content-scripts/ popup/ LICENSE THIRD_PARTY_NOTICES.md"
+    "package": "zip -r auto-prairielearn.zip manifest.json assets/ background/ content-scripts/ popup/ LICENSE THIRD_PARTY_NOTICES.md",
+    "test": "node --test"
   },
   "license": "MIT"
 }
