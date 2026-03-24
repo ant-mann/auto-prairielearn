@@ -1,3 +1,12 @@
+/**
+ * ChatGPT integration supports two runtime modes:
+ * 1) Signed-in chat UI where the extension can directly type and submit prompts.
+ * 2) Logged-out or restricted UI where we still detect readiness/health and report
+ *    deterministic errors back to PrairieLearn for fallback handling.
+ *
+ * The focus-hold logic below exists to keep the composer stable while synthetic input
+ * events are dispatched, which prevents intermittent prompt loss in dynamic UI updates.
+ */
 let hasResponded = false;
 let messageCountAtQuestion = 0;
 let observationStartTime = 0;
@@ -26,6 +35,8 @@ const SEND_BUTTON_SELECTORS = [
   'button[data-testid*="send"]',
   'form button[type="submit"]',
 ];
+
+const { buildPromptText } = globalThis.PLAAnswerUtils || {};
 
 const ASSISTANT_MESSAGE_SELECTORS = [
   '[data-message-author-role="assistant"]',
@@ -395,81 +406,7 @@ function normalizeResponseText(text) {
 }
 
 function getPromptText(questionData) {
-  const { type, question, options, previousCorrection, promptStrategy } = questionData;
-  let text = `Type: ${type}\nQuestion: ${question}`;
-
-  if (previousCorrection && previousCorrection.question) {
-    if (previousCorrection.correctAnswer) {
-      text =
-        `CORRECTION FROM PREVIOUS ANSWER: For the question "${
-          previousCorrection.question
-        }", your answer was incorrect. The correct answer was: ${JSON.stringify(
-          previousCorrection.correctAnswer
-        )}\n\nNow answer this new question:\n\n` + text;
-    } else if (previousCorrection.incorrectAnswer) {
-      text =
-        `FEEDBACK FROM PREVIOUS VARIANT: For the question "${
-          previousCorrection.question
-        }", your previous answer ${JSON.stringify(
-          previousCorrection.incorrectAnswer
-        )} was incorrect.\n\nNow answer this new question:\n\n` + text;
-    } else {
-      text =
-        `FEEDBACK FROM PREVIOUS VARIANT: Your previous answer for the question "${
-          previousCorrection.question
-        }" was incorrect.\n\nNow answer this new question:\n\n` + text;
-    }
-  }
-
-  if (type === "matching") {
-    text +=
-      "\nPrompts:\n" +
-      options.prompts.map((prompt, i) => `${i + 1}. ${prompt}`).join("\n");
-    text +=
-      "\nChoices:\n" +
-      options.choices.map((choice, i) => `${i + 1}. ${choice}`).join("\n");
-    text +=
-      "\n\nPlease match each prompt with the correct choice. Format your answer as an array where each element is 'Prompt -> Choice'.";
-  } else if (type === "fill_in_the_blank") {
-    text +=
-      "\n\nThis is a fill in the blank question. If there are multiple blanks, provide answers as an array in order of appearance. For a single blank, you can provide a string.";
-  } else if (type === "multiple_select") {
-    text +=
-      "\nOptions:\n" + options.map((opt, i) => `${i + 1}. ${opt}`).join("\n");
-    text +=
-      '\n\nIMPORTANT: This is a select-all-that-apply question. The "answer" field must be a JSON array containing every correct option exactly as written. If only one option applies, still return an array with one string.';
-  } else if (options && options.length > 0) {
-    text +=
-      "\nOptions:\n" + options.map((opt, i) => `${i + 1}. ${opt}`).join("\n");
-    text +=
-      "\n\nIMPORTANT: Your answer must EXACTLY match one of the above options. Do not include numbers in your answer. If there are periods, include them.";
-  }
-
-  if (promptStrategy === "strict_json") {
-    if (type === "multiple_select") {
-      text +=
-        '\n\nCRITICAL: Return only compact JSON. Do not wrap JSON in markdown. The "answer" value must be an array of exact option strings from the list.';
-    } else {
-      text +=
-        '\n\nCRITICAL: Return only compact JSON. Do not wrap the JSON in markdown. The "answer" value must be a single option string copied exactly from the list.';
-    }
-  } else if (promptStrategy === "retry_feedback") {
-    if (type === "multiple_select") {
-      text +=
-        '\n\nBe extra careful. If your previous answer was wrong or malformed, correct that behavior now. Return all correct options as an exact string array in valid JSON.';
-    } else {
-      text +=
-        '\n\nBe extra careful. If your previous answer was wrong or malformed, correct that behavior now. Return one exact option string in valid JSON.';
-    }
-  } else {
-    text +=
-      '\n\nChoose the best answer, then explain it briefly in one sentence.';
-  }
-
-  text +=
-    '\n\nPlease provide your answer in JSON format with keys "answer" and "explanation". Explanations should be no more than one sentence. DO NOT acknowledge the correction in your response, only answer the new question.';
-
-  return text;
+  return buildPromptText(questionData, "chatgpt");
 }
 
 function ensureComposerReady() {

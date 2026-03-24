@@ -3,6 +3,7 @@ let messageCountAtQuestion = 0;
 let observationStartTime = 0;
 let observationTimeout = null;
 let observer = null;
+const { buildPromptText } = globalThis.PLAAnswerUtils || {};
 const PROVIDER_NAME = "gemini";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -138,76 +139,7 @@ function verifyGeminiComposerText(inputArea, expectedText) {
 }
 
 async function insertQuestion(questionData) {
-  const { type, question, options, previousCorrection, promptStrategy } = questionData;
-  let text = `Type: ${type}\nQuestion: ${question}`;
-
-  if (previousCorrection && previousCorrection.question) {
-    if (previousCorrection.correctAnswer) {
-      text =
-        `CORRECTION FROM PREVIOUS ANSWER: For the question "${
-          previousCorrection.question
-        }", your answer was incorrect. The correct answer was: ${JSON.stringify(
-          previousCorrection.correctAnswer
-        )}\n\nNow answer this new question:\n\n` + text;
-    } else if (previousCorrection.incorrectAnswer) {
-      text =
-        `FEEDBACK FROM PREVIOUS VARIANT: For the question "${
-          previousCorrection.question
-        }", your previous answer ${JSON.stringify(
-          previousCorrection.incorrectAnswer
-        )} was incorrect.\n\nNow answer this new question:\n\n` + text;
-    } else {
-      text =
-        `FEEDBACK FROM PREVIOUS VARIANT: Your previous answer for the question "${
-          previousCorrection.question
-        }" was incorrect.\n\nNow answer this new question:\n\n` + text;
-    }
-  }
-
-  if (type === "matching") {
-    text +=
-      "\nPrompts:\n" +
-      options.prompts.map((prompt, i) => `${i + 1}. ${prompt}`).join("\n");
-    text +=
-      "\nChoices:\n" +
-      options.choices.map((choice, i) => `${i + 1}. ${choice}`).join("\n");
-    text +=
-      "\n\nPlease match each prompt with the correct choice. Format your answer as an array where each element is 'Prompt -> Choice'.";
-  } else if (type === "fill_in_the_blank") {
-    text +=
-      "\n\nThis is a fill in the blank question. If there are multiple blanks, provide answers as an array in order of appearance. For a single blank, you can provide a string.";
-  } else if (type === "multiple_select") {
-    text +=
-      "\nOptions:\n" + options.map((opt, i) => `${i + 1}. ${opt}`).join("\n");
-    text +=
-      '\n\nIMPORTANT: This is a select-all-that-apply question. The "answer" field must be a JSON array containing every correct option exactly as written. If only one option applies, still return an array with one string.';
-  } else if (options && options.length > 0) {
-    text +=
-      "\nOptions:\n" + options.map((opt, i) => `${i + 1}. ${opt}`).join("\n");
-    text +=
-      "\n\nIMPORTANT: Your answer must EXACTLY match one of the above options. Do not include numbers in your answer. If there are periods, include them.";
-  }
-
-  if (promptStrategy === "strict_json") {
-    if (type === "multiple_select") {
-      text +=
-        '\n\nCRITICAL: Return only valid JSON. The "answer" value must be an array of exact option strings copied from the list.';
-    } else {
-      text +=
-        '\n\nCRITICAL: Return only valid JSON with an exact option string in "answer".';
-    }
-  } else if (promptStrategy === "retry_feedback") {
-    if (type === "multiple_select") {
-      text +=
-        '\n\nDouble-check every selected option and return all correct selections as an exact string array in valid JSON.';
-    } else {
-      text +=
-        '\n\nDouble-check the answer and return one exact option string in valid JSON.';
-    }
-  }
-
-  text +=
-    '\n\nPlease provide your answer in JSON format with keys "answer" and "explanation". Explanations should be no more than one sentence. DO NOT acknowledge the correction in your response, only answer the new question.';
+  const text = buildPromptText(questionData, "gemini");
 
   return new Promise((resolve, reject) => {
     waitForIdle()

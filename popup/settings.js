@@ -1,3 +1,5 @@
+let availabilityPollIntervalId = null;
+
 const PROVIDERS = ["chatgpt", "gemini", "deepseek"];
 
 const DEFAULT_SETTINGS = {
@@ -55,9 +57,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderSettings(settings, elements);
   bindEvents(elements, settings);
   refreshAvailability(settings.aiModel, elements);
-  setInterval(() => {
+  availabilityPollIntervalId = setInterval(() => {
     refreshAvailability(settings.aiModel, elements);
   }, 5000);
+});
+
+window.addEventListener("unload", () => {
+  if (availabilityPollIntervalId) {
+    clearInterval(availabilityPollIntervalId);
+    availabilityPollIntervalId = null;
+  }
 });
 
 function renderSettings(settings, elements) {
